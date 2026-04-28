@@ -60,6 +60,7 @@ To build a system that can:
 ---
 
 ## 🏗️ Project Structure
+```
 project_root/
 │
 ├── app.py
@@ -84,7 +85,7 @@ project_root/
 ├── faces_dataset/
 ├── instagram_cookies.json
 └── README.md
-
+```
 ---
 
 ## ⚙️ Installation
