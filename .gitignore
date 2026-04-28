@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual env
+venv/
+.env
+
+# Chrome & Selenium
+chrome-win64/
+chromedriver-win64/
+selenium_session/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Dataset (optional if large)
+faces_dataset/
+
+# Secrets
+instagram_cookies.json

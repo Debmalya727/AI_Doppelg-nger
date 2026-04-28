@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset Cluster Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0f172a; /* Fallback */
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .bg-gradient-animate {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -2;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glass Effect */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Custom Scrollbar for the page */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 font-sans text-slate-800">
+
+    <div class="bg-gradient-animate"></div>
+
+    <div class="max-w-7xl mx-auto glass-panel rounded-3xl shadow-2xl p-6 md:p-10 relative overflow-hidden animate-fade-in">
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+
+        <div class="flex flex-col md:flex-row justify-between items-center mb-10 border-b border-slate-200 pb-6">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-indigo-900 to-purple-900 drop-shadow-sm">
+                    Dataset Cluster Analysis
+                </h1>
+                <p class="text-slate-500 mt-1">Visualizing grouping patterns within the face dataset.</p>
+            </div>
+            
+            <div class="mt-4 md:mt-0">
+                <a href="/" class="px-6 py-2 rounded-full bg-white border border-slate-200 text-slate-700 font-bold hover:bg-indigo-50 hover:text-indigo-700 hover:border-indigo-200 transition-all shadow-sm flex items-center gap-2">
+                    <span>&larr;</span> Back to Home
+                </a>
+            </div>
+        </div>
+
+        {% if clusters %}
+            <div class="space-y-8">
+                {% for cluster_id, filenames in clusters.items() %}
+                    {% if cluster_id != -1 %} {# Skip the noise cluster for now #}
+                        <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-100 hover:shadow-lg transition-shadow duration-300">
+                            
+                            <div class="flex items-center justify-between mb-4">
+                                <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                    <span class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-sm font-extrabold">
+                                        {{ loop.index }}
+                                    </span>
+                                    Cluster #{{ loop.index }}
+                                </h2>
+                                <span class="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-semibold rounded-full uppercase tracking-wide">
+                                    {{ filenames|length }} images
+                                </span>
+                            </div>
+                            
+                            <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
+                                {% set outer_loop_index = loop.index %} 
+                                {% for filename in filenames %}
+                                <div class="group relative aspect-square overflow-hidden rounded-xl bg-slate-50 border border-slate-200 cursor-pointer">
+                                    <img src="{{ url_for('static', filename='matches/' + filename) }}" 
+                                         alt="Image from cluster {{ outer_loop_index }}" 
+                                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                         loading="lazy"
+                                         onerror="this.onerror=null; this.src='https://placehold.co/100x100/f1f5f9/94a3b8?text=Error';">
+                                    
+                                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                {% if clusters['-1'] %}
+                    <div class="bg-slate-50 rounded-2xl p-6 border-2 border-dashed border-slate-300 relative overflow-hidden">
+                        <div class="flex items-center gap-2 mb-4">
+                            <h2 class="text-lg font-bold text-slate-600">Noise Points (Outliers)</h2>
+                            <span class="px-2 py-0.5 bg-slate-200 text-slate-600 text-xs font-bold rounded-md">
+                                {{ clusters['-1']|length }}
+                            </span>
+                        </div>
+                        
+                        <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-12 gap-2">
+                            {% for filename in clusters['-1'] %}
+                            <div class="relative aspect-square overflow-hidden rounded-lg bg-slate-200 opacity-70 hover:opacity-100 transition-opacity duration-200">
+                                 <img src="{{ url_for('static', filename='matches/' + filename) }}" 
+                                      alt="Noise point" 
+                                      class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300"
+                                      loading="lazy"
+                                      onerror="this.onerror=null; this.src='https://placehold.co/100x100/e2e8f0/94a3b8?text=Error';">
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+
+        {% else %}
+            <div class="text-center py-20 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                <div class="text-5xl mb-4">📊</div>
+                <h3 class="text-xl font-bold text-slate-700">No Clusters Found</h3>
+                <p class="text-slate-500 mt-2">Try adjusting your algorithm parameters or adding more data.</p>
+            </div>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

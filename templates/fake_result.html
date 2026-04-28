@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection Halted</title>
+    <!-- 1. Add Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'], // Use Inter font
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-red-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="max-w-md mx-auto bg-white p-6 md:p-8 rounded-lg shadow-xl border-t-4 border-red-600 text-center">
+
+        <h1 class="text-2xl md:text-3xl font-bold text-red-700 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 inline-block mr-2 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            AI-Generated Image Detected
+        </h1>
+        
+        <img src="{{ user_image }}" 
+             alt="Detected AI Image"
+             width="250" 
+             class="mx-auto border-4 border-red-400 rounded-md my-6 shadow-sm"
+             onerror="this.onerror=null; this.src='https://placehold.co/250x250/fee2e2/dc2626?text=Image+Load+Error';">
+        
+        <p class="text-lg text-gray-700 mb-3">
+            This image has been flagged as potentially AI-generated or a deepfake.
+        </p>
+        <p class="text-sm text-gray-600 mb-6">
+            As per project policy, personal details and matching results will not be revealed for synthetic images to ensure ethical use.
+        </p>
+
+        <a href="/" 
+           class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+            Try a Different Image
+        </a>
+
+    </div>
+
+</body>
+</html>

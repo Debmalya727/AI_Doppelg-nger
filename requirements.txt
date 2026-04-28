@@ -1,0 +1,12 @@
+deepface
+flask
+opencv-python
+tf-keras
+Werkzeug
+numpy
+face_recognition
+transformers
+torch
+mysql-connector-python
+spacy
+scikit-learn

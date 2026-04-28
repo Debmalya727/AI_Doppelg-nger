@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Doppelgänger Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0f172a; /* Fallback */
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        .bg-gradient-animate {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -2;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Glass Effect */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /* Loading Overlay */
+        #loadingOverlay {
+            backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 font-sans text-slate-800">
+
+    <div class="bg-gradient-animate"></div>
+
+    <div id="loadingOverlay" class="fixed inset-0 z-[9999] hidden flex-col justify-center items-center bg-white/80 transition-all duration-300 opacity-0 invisible">
+        <div class="relative w-24 h-24 mb-4">
+            <div class="absolute top-0 left-0 w-full h-full border-4 border-indigo-200 rounded-full"></div>
+            <div class="absolute top-0 left-0 w-full h-full border-4 border-indigo-600 rounded-full border-t-transparent animate-spin"></div>
+        </div>
+        <p class="text-xl font-semibold text-indigo-900 animate-pulse">Searching Instagram...</p>
+        <p class="text-sm text-indigo-600 mt-2">Analyzing public profiles</p>
+    </div>
+
+    <div class="w-full max-w-md glass-panel rounded-3xl shadow-2xl p-8 relative overflow-hidden animate-fade-in">
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
+
+        <div class="text-center mb-8">
+            <div class="inline-block p-3 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl mb-4 shadow-lg text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            
+            <h1 class="text-3xl font-extrabold mb-2 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 via-indigo-900 to-purple-900">
+                Instagram Search
+            </h1>
+            <p class="text-slate-500 font-medium">Enter a username to find their AI Doppelgänger.</p>
+        </div>
+
+        <form id="searchForm" action="/process_instagram_search" method="post" class="space-y-6">
+            <div>
+                <label for="username" class="block text-sm font-bold text-slate-700 mb-2 ml-1">Instagram Username</label>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-indigo-500 transition-colors">
+                        <span class="text-lg font-bold">@</span>
+                    </div>
+                    <input type="text" id="username" name="username" required placeholder="username"
+                           class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all shadow-inner text-slate-800 font-medium placeholder-slate-400">
+                </div>
+            </div>
+
+            <button type="submit" 
+                    class="w-full py-3.5 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center gap-2">
+                <span>Search Doppelgängers</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </button>
+        </form>
+
+        <div class="mt-8 pt-6 border-t border-slate-100 text-center">
+             <a href="/" class="inline-flex items-center text-sm font-semibold text-slate-500 hover:text-indigo-600 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Back to Home
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const searchForm = document.getElementById('searchForm');
+
+        // Function to show the loading overlay
+        function showLoading() {
+            loadingOverlay.classList.remove('hidden');
+            setTimeout(() => {
+                loadingOverlay.classList.remove('opacity-0', 'invisible');
+            }, 10);
+        }
+
+        // Show loading when the search form is submitted
+        if (searchForm) {
+            searchForm.addEventListener('submit', showLoading);
+        }
+    </script>
+
+</body>
+</html>
